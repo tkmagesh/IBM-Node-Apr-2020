@@ -13,6 +13,10 @@
         }
         function onBtnDoWorkClick(){
             displayMessage('Work Started...');
+            setTimeout(triggerWork);
+        }
+
+        function triggerWork(){
             doWork();
             displayMessage('Work Completed...');
         }
