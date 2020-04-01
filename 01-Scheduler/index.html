@@ -17,8 +17,11 @@
         }
 
         function triggerWork(){
-            doWork();
-            displayMessage('Work Completed...');
+            doWork(onWorkCompletion);
+        }
+
+        function onWorkCompletion(){
+             displayMessage('Work Completed...');
         }
 
         function displayMessage(msg){
@@ -26,12 +29,27 @@
             divMessages.innerHTML += msg + '<br/>';
         }
 
-        function doWork(){
-            for(var i=0; i<20000; i++)
-                for(var j=0; j < 1000; j++)
-                    for(var k=0; k<1000; k++){
+        function doWork(workCompletionCallback){
+            var currentIteration = 0,
+                totalIterations = 1000;
 
-                    }
+            function oneIteration(){
+                for(var i=0; i< (20000/totalIterations); i++)
+                    for(var j=0; j < 1000; j++)
+                        for(var k=0; k<1000; k++){
+
+                        }
+                ++currentIteration;
+                if (currentIteration < totalIterations){
+                    setTimeout(oneIteration);
+                } else {
+                    console.log('JOB DONE!!!');
+                    if (typeof workCompletionCallback === 'function')
+                        workCompletionCallback();
+                }
+            }
+
+            setTimeout(oneIteration);
         }
     </script>
 </head>
