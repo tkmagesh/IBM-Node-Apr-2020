@@ -1,8 +1,8 @@
 var calculator = {
-    add(x,y){
+    add : function (x,y){
         return x + y;
     },
-    subtract(x,y){
+    subtract : function(x,y){
         return x - y;
     },
     multiply(x,y){
