@@ -1,0 +1,14 @@
+create a server
+    listening on port 8080
+
+    if the req is for a static resource
+        handle it like a web server
+    if the req is for '/calculator'
+        handle it like a app server
+    else 
+        serve 404
+
+if the requested resource extn is any of the following then treat the resource as a static resource
+html, js, css, xml, json, jpg, png, ico, txt
+
+    
