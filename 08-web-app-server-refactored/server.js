@@ -1,33 +1,19 @@
-//create the server that will behave both like a web server and app server depending on the request
-
 var http = require('http');
 
 var dataParser = require('./dataParser'),
     serveStatic = require('./serveStatic'),
     serveCalculator = require('./serveCalculator'),
-    notFoundHandler = require('./notFoundHandler');
+    notFoundHandler = require('./notFoundHandler'),
+    app = require('./app');
 
-var _middlewares = [ dataParser, serveStatic, serveCalculator, notFoundHandler ];
+app.use(dataParser);
+app.use(serveStatic);
+app.use(serveCalculator);
+app.use(notFoundHandler);
 
-function exec(req, res, middlewares){
-    var first = middlewares[0],
-        remaining = middlewares.slice(1),
-        next = function(){
-            exec(req, res, remaining);
-        };
-        if (typeof first === 'function')
-            first(req, res, next);
-}
+/* console.log(req.method + '\t' + req.urlObj.pathname); */
 
-var server = http.createServer(function (req, res) {
-    /* dataParser(req);
-    console.log(req.method + '\t' + req.urlObj.pathname);
-    serveStatic(req, res);
-    serveCalculator(req, res);
-    notFoundHandler(res); */
-
-    exec(req, res, _middlewares);
-});
+var server = http.createServer(app);
 
 server.listen(8080);
 
