@@ -8,21 +8,28 @@ function isStatic(resource) {
     return staticResExtns.indexOf(resExtn) >= 0;
 }
 
-module.exports = function(req, res){
+module.exports = function(req, res, next){
     var resourceName = req.urlObj.pathname === '/' ? '/index.html' : req.urlObj.pathname;
     if (isStatic(resourceName)) {
         var resourceFullName = path.join(__dirname, resourceName);
         if (fs.existsSync(resourceFullName)) {
-            var stream = fs.createReadStream(resourceFullName);
+            /* 
+            var fileContents = fs.readFileSync(resourceFullName);
+            res.write(fileContents);
+            res.end(); 
+            */
+             var stream = fs.createReadStream(resourceFullName);
             stream.on('error', function (err) {
                 console.log(err);
                 res.statusCode = 500;
                 res.end();
             });
             stream.pipe(res);
-        } else {
-            res.statusCode = 404;
-            res.end();
+            stream.on('end', function(){
+                next()
+            });
         }
+    } else {
+        next();
     }
 }
