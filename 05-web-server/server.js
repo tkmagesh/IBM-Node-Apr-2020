@@ -1,13 +1,16 @@
 var http = require('http'),
     fs = require('fs'),
-    path = require('path');
+    path = require('path'),
+    url = require('url');
 
 //req (IncomingMessage), Readable
 //res (ServerResponse), Writable
 
 var server = http.createServer(function(req, res){
-    console.log(req.url);
-    var resourceName = req.url === '/' ? 'index.html' : req.url;
+    var resourceRequested = req.url === '/' ? 'index.html' : req.url;
+    var urlObj = url.parse(resourceRequested);
+    var resourceName = urlObj.pathname;
+    console.log(resourceName);
     var resourceFullName = path.join(__dirname, resourceName);
     if (fs.existsSync(resourceFullName)){
         var stream = fs.createReadStream(resourceFullName);
