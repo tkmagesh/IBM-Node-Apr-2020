@@ -1,0 +1,14 @@
+
+appServer
+
+http://localhost:8085/calculator?op=add&x=100&y=200
+
+if (request is for '/calculator'){
+    parse the querystring
+    call the calculator with the data
+    get the result
+    res.write result
+} else {
+    res.statusCode = 404;
+    res.end();
+}
