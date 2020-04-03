@@ -35,21 +35,39 @@ router.get('/:id', function(req, res, next){
 
 router.post('/', function(req, res, next){
     var newBugData = req.body;
-    //update the array
-    //return the newbug with status code 201
+    var newBugId = bugsList.reduce(function(result, bug) { 
+        return result > bug.id ? result : bug.id;
+    }) + 1;
+    newBugData.id = newBugId;
+    bugsList.push(newBugData);
+    res.status(201).json(newBugData);
 });
 
 router.put('/:id', function (req, res, next) {
     var bugId = parseInt(req.params.id),
         updatedBugData = req.body;
-    //update the bugsList array
-    //return the updated bug
-    //return 404 if the bug does not exist
+    var existingBug = bugsList.find(function(bug){
+        return bug.id === bugId;
+    });
+    if (!existingBug)
+        return res.sendStatus(404);
+    bugsList = bugsList.map(function(bug){
+        return bug.id === bugId ? updatedBugData : bug;
+    });
+    res.json(updatedBugData);
 });
 
 router.delete('/:id', function (req, res, next) {
-    var bugId = parseInt(req.params.id),
-       
+    var bugId = parseInt(req.params.id);
+    var existingBug = bugsList.find(function (bug) {
+        return bug.id === bugId;
+    });  
+    if (!existingBug)
+        return res.sendStatus(404);
+    bugsList = bugsList.filter(function (bug) {
+        return bug.id !== bugId;
+    });
+    res.sendStatus(200);
     //delte the bug from the array
     //return 200
     //return 404 if the bug does not exist
