@@ -1,17 +1,39 @@
 //modify the below code to persist the data in the db/bugDb.json file
 
 //use JSON.stringify and JSON.parse
+var db = require('./db');
 
-function getAll(){
-    //read the db
-    return bugsList;
+//using callback
+/* function getAll(callback){
+    db.getData(callback);
 }
 
-function get(id){
+function get(id, callback){
     //read the db
-    return bugsList.find(function(bug){
-        return bug.id === id;
+    db.getData(function(err, bugsList){
+        var bug = bugsList.find(function(bug){
+            return bug.id === id;
+        });
+        return callback(err, bug);
     });
+} */
+
+//using promise
+function getAll() {
+    return db.getData();
+}
+
+function get(id) {
+    //read the db
+    return db
+        .getData()
+        .then(function(bugsList){
+            var bug = bugsList.find(function (bug) {
+                return bug.id === id;
+            });
+            return bug;
+        });
+    
 }
 
 function addNew(bug){
