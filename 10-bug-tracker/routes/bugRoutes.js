@@ -1,18 +1,18 @@
 var express = require('express'),
-    router = express.Router();
+    router = express.Router(),
+    bugService = require('../services/bugService');
 
 //modify this to use the bugService.js
 
 
 router.get('/', function(req, res, next){
+    var bugsList = bugService.getAll();
     res.json(bugsList);
 });
 
 router.get('/:id', function(req, res, next){
-    var bugId = parseInt(req.params.id),
-        bug = bugsList.find(function(bug){
-            return bug.id === bugId;
-        });
+    var bugId = parseInt(req.params.id);
+    var bug = bugService.get(bugId);
     if (bug){
         res.json(bug);
     } else {
@@ -21,39 +21,26 @@ router.get('/:id', function(req, res, next){
 });
 
 router.post('/', function(req, res, next){
-    var newBugData = req.body;
-    var newBugId = bugsList.reduce(function(result, bug) { 
-        return result > bug.id ? result : bug.id;
-    }) + 1;
-    newBugData.id = newBugId;
-    bugsList.push(newBugData);
-    res.status(201).json(newBugData);
+    var newBugData = req.body
+    var newBug = bugService.addNew(newBugData);
+    res.status(201).json(newBug);
 });
 
 router.put('/:id', function (req, res, next) {
     var bugId = parseInt(req.params.id),
         updatedBugData = req.body;
-    var existingBug = bugsList.find(function(bug){
-        return bug.id === bugId;
-    });
-    if (!existingBug)
+    var updatedBug = bugService.update(bugId, updatedBugData)
+    if (!updatedBug)
         return res.sendStatus(404);
-    bugsList = bugsList.map(function(bug){
-        return bug.id === bugId ? updatedBugData : bug;
-    });
-    res.json(updatedBugData);
+    res.json(updatedBug);
 });
 
 router.delete('/:id', function (req, res, next) {
     var bugId = parseInt(req.params.id);
-    var existingBug = bugsList.find(function (bug) {
-        return bug.id === bugId;
-    });  
-    if (!existingBug)
+    var result = bugService.remove(bugId)
+    if (!result)
         return res.sendStatus(404);
-    bugsList = bugsList.filter(function (bug) {
-        return bug.id !== bugId;
-    });
+    
     res.sendStatus(200);
     //delte the bug from the array
     //return 200
