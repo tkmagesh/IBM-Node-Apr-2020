@@ -43,18 +43,20 @@ async function get(id) {
     
 }
 
-function addNew(bug){
+async function addNew(bug){
         //read the db
+        var bugsList = await db.getData();
         bug.id  = bugsList.reduce(function (result, bug) {
             return result > bug.id ? result : bug.id;
         }) + 1;
         bugsList.push(bug);
-        //write to the db
+        await db.saveData(bugsList);
         return bug;
 }
 
-function update(id, updatedBug){
+async function update(id, updatedBug){
     //read the db
+    var bugsList = await db.getData();
     var existingBug = bugsList.find(function (bug) {
         return bug.id === id;
     });
@@ -62,12 +64,13 @@ function update(id, updatedBug){
     bugsList = bugsList.map(function (bug) {
         return bug.id === id ? updatedBug : bug;
     });
-    //write to the db
+    await db.saveData(bugsList);
     return updatedBug;
 }
 
-function remove(bugId){
+async function remove(bugId){
     //read the db
+    var bugsList = await db.getData();
     var existingBug = bugsList.find(function (bug) {
         return bug.id === bugId;
     }); 
@@ -75,7 +78,7 @@ function remove(bugId){
     bugsList = bugsList.filter(function (bug) {
         return bug.id !== bugId;
     });
-    //write to the db
+    await db.saveData(bugsList);
     return true;
 }
 
