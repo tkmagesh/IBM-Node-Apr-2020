@@ -24,13 +24,15 @@ router.get('/:id', function(req, res, next){
 }); */
 
 //using promise
-router.get('/', function (req, res, next) {
-    bugService
+router.get('/', async function (req, res, next) {
+    /* bugService
         .getAll()
         .then(function(bugs){
             res.json(bugs);
-        });
-    
+        }); */
+
+    var bugs = await bugService.getAll();
+    res.json(bugs);
 });
 
 router.get('/:id', function (req, res, next) {

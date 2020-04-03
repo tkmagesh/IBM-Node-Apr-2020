@@ -23,16 +23,23 @@ function getAll() {
     return db.getData();
 }
 
-function get(id) {
+async function get(id) {
     //read the db
-    return db
+    /*  return db
         .getData()
         .then(function(bugsList){
             var bug = bugsList.find(function (bug) {
                 return bug.id === id;
             });
             return bug;
-        });
+        }); */
+
+    var bugsList = await db.getData(); 
+    var bug = bugsList.find(function (bug) {
+        return bug.id === id;
+    });
+    return bug;
+
     
 }
 
