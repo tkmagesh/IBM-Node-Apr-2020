@@ -1,20 +1,7 @@
 var express = require('express'),
     router = express.Router();
 
-var bugsList = [
-    {
-        id : 1,
-        name: 'Server communication failure',
-        isClosed : false,
-        createdAt : new Date()
-    },
-    {
-        id: 2,
-        name: 'Application not responding',
-        isClosed: true,
-        createdAt: new Date()
-    },
-];
+//modify this to use the bugService.js
 
 
 router.get('/', function(req, res, next){
